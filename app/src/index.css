@@ -30,25 +30,44 @@
   }
 
   .dark {
-    --background: 222.2 47% 11%;
+    /* 배경 - 더 어둡게하여 대비 향상 */
+    --background: 222.2 47% 6%;
     --foreground: 210 40% 98%;
-    --card: 222.2 47% 11%;
+
+    /* 카드 - 배경보다 약간 밝게하여 구분 */
+    --card: 222.2 47% 10%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 47% 11%;
+
+    /* 팝오버 */
+    --popover: 222.2 47% 10%;
     --popover-foreground: 210 40% 98%;
-    --primary: 25 95% 53%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217.2 32.6% 17.5%;
+
+    /* Primary - 더 밝고 선명하게 */
+    --primary: 25 95% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - 더 명확한 구분 */
+    --secondary: 217.2 32.6% 18%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+
+    /* Muted - 가시성 향상 */
+    --muted: 217.2 32.6% 16%;
+    --muted-foreground: 215 20.2% 80%;
+
+    /* Accent */
+    --accent: 217.2 32.6% 18%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 25 95% 53%;
+
+    /* Destructive - 더 선명하게 */
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border - 더 명확한 구분 */
+    --border: 217.2 32.6% 28%;
+    --input: 217.2 32.6% 18%;
+    --ring: 25 95% 58%;
+
+    /* Chart colors */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;

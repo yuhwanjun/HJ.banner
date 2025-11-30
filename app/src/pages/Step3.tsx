@@ -43,7 +43,7 @@ export function Step3() {
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-muted-foreground">디자인을 선택해주세요.</p>
+          <p className="text-foreground/70">디자인을 선택해주세요.</p>
         </CardContent>
       </Card>
     );
@@ -54,8 +54,8 @@ export function Step3() {
       {/* 현수막 미리보기 */}
       <Card>
         <CardHeader>
-          <CardTitle>현수막 미리보기</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-foreground">현수막 미리보기</CardTitle>
+          <CardDescription className="text-foreground/80">
             편집한 내용이 실시간으로 반영됩니다.
           </CardDescription>
         </CardHeader>
@@ -69,8 +69,8 @@ export function Step3() {
       {/* 편집 폼 */}
       <Card>
         <CardHeader>
-          <CardTitle>텍스트 편집</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-foreground">텍스트 편집</CardTitle>
+          <CardDescription className="text-foreground/80">
             각 텍스트 영역을 편집할 수 있습니다.
           </CardDescription>
         </CardHeader>

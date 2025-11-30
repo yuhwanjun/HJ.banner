@@ -18,11 +18,21 @@ export function Nav({ children }: NavProps) {
     },
   });
 
+  const isStep4 = navigator.currentStep === 3;
+
   return (
     <NavigatorProvider value={navigator}>
       <div className={cn("flex h-full min-h-screen w-full flex-col gap-2")}>
         {children}
-        <nav className="bg-background/95 fixed bottom-0 left-0 right-0 z-50 flex w-full flex-col gap-1 border-t p-4 backdrop-blur md:min-w-[280px]">
+        <nav
+          className={cn(
+            "fixed bottom-0 left-0 right-0 z-50 flex w-full flex-col gap-1 border-t p-4 backdrop-blur md:min-w-[280px]",
+            !isStep4 && "bg-background/95",
+          )}
+          style={{
+            backgroundColor: isStep4 ? "transparent" : undefined,
+          }}
+        >
           {/* Step 인디케이터 */}
           <div
             className={cn(
@@ -46,9 +56,7 @@ export function Nav({ children }: NavProps) {
                     index === navigator.currentStep &&
                       "ring-primary ring-2 ring-offset-2",
                   )}
-                >
-                  {index + 1}
-                </Button>
+                />
                 {index < STEPS.length - 1 && (
                   <div
                     className={cn(
@@ -76,7 +84,9 @@ export function Nav({ children }: NavProps) {
               이전
             </Button>
             <div
-              className={cn("text-muted-foreground px-2 text-sm sm:text-base")}
+              className={cn(
+                "text-foreground/80 px-2 text-sm font-medium sm:text-base",
+              )}
             >
               {navigator.currentStep + 1} / {STEPS.length}
             </div>

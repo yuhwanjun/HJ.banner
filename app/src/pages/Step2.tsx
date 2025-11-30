@@ -19,8 +19,8 @@ export function Step2() {
     <div className="w-full space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>현수막 디자인 선택</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-foreground">현수막 디자인 선택</CardTitle>
+          <CardDescription className="text-foreground/80">
             원하는 현수막 디자인을 선택해주세요.
           </CardDescription>
         </CardHeader>
