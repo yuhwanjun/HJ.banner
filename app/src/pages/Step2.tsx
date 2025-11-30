@@ -3,13 +3,7 @@ import { BannerPreview } from "@/components/BannerPreview";
 import { BANNER_DESIGNS } from "@/config/bannerDesigns";
 import { useBannerContext } from "@/contexts/BannerContext";
 import { useNavigatorContext } from "@/contexts/NavigatorContext";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function Step2() {
   const { setSelectedDesign, editedValues } = useBannerContext();

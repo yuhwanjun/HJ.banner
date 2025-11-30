@@ -1,6 +1,6 @@
 import type { BannerDesign } from "@/types/banner";
 import { Kookmin0 } from "@/components/banners/Kookmin0";
-import { Minju0 } from "@/components/banners/minju0";
+import { Minju0 } from "@/components/banners/Minju0";
 
 // 현수막 디자인 목록
 export const BANNER_DESIGNS: BannerDesign[] = [
