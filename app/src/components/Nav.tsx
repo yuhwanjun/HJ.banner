@@ -52,15 +52,22 @@ export function Nav({ children }: NavProps) {
                         : "outline"
                   }
                   className={cn(
-                    "h-7 w-7 rounded-full sm:h-8 sm:w-8",
+                    "h-3 w-3 rounded-full",
                     index === navigator.currentStep &&
                       "ring-primary ring-2 ring-offset-2",
+                    // outline이 아닌 경우 (default, secondary) 흰색 fill
+                    index !== navigator.currentStep &&
+                      index < navigator.currentStep &&
+                      "bg-white",
+                    index === navigator.currentStep && "bg-white",
+                    // outline variant일 때 얇은 보더
+                    index > navigator.currentStep && "border-[0.5px]",
                   )}
                 />
                 {index < STEPS.length - 1 && (
                   <div
                     className={cn(
-                      "mx-1 h-0.5 flex-1 sm:mx-2 sm:h-1",
+                      "mx-1 h-1 flex-1",
                       index < navigator.currentStep ? "bg-primary" : "bg-muted",
                     )}
                   />
@@ -83,13 +90,6 @@ export function Nav({ children }: NavProps) {
             >
               이전
             </Button>
-            <div
-              className={cn(
-                "text-foreground/80 px-2 text-sm font-medium sm:text-base",
-              )}
-            >
-              {navigator.currentStep + 1} / {STEPS.length}
-            </div>
             <Button
               onClick={navigator.next}
               disabled={!navigator.canGoNext}

@@ -74,7 +74,10 @@ export function Step4() {
     if (!element) return;
 
     const handleTouchStart = (e: TouchEvent) => {
-      e.preventDefault();
+      // cancelable인 경우에만 preventDefault 호출
+      if (e.cancelable) {
+        e.preventDefault();
+      }
       e.stopPropagation();
       if (e.touches.length === 1) {
         setIsDragging(true);
@@ -111,7 +114,6 @@ export function Step4() {
     };
 
     const handleGlobalTouchMove = (e: TouchEvent) => {
-      // cancelable인 경우에만 preventDefault 호출
       if (e.cancelable) {
         e.preventDefault();
       }
@@ -186,7 +188,7 @@ export function Step4() {
           width: "100vw",
           height: "100vh",
           pointerEvents: "none",
-          willChange: backgroundImage ? "contents" : "auto", // 성능 힌트
+          willChange: backgroundImage ? "contents" : "auto",
           backgroundColor: "hsl(222.2, 47%, 6%)", // 배경이 없을 때 어두운 배경
         }}
       />
@@ -215,8 +217,8 @@ export function Step4() {
                 MozUserSelect: "none",
                 msUserSelect: "none",
                 WebkitTouchCallout: "none",
-                touchAction: "none", // 터치 기본 동작 방지
-                willChange: isDragging ? "transform" : "auto", // 드래그 중에만 GPU 가속
+                touchAction: "none",
+                willChange: isDragging ? "transform" : "auto",
               }}
               onMouseDown={handleMouseDown}
               onDragStart={(e) => {

@@ -20,8 +20,8 @@ export function useCamera() {
     const video = videoRef.current;
     const canvas = previewCanvasRef.current;
     const ctx = canvas.getContext("2d", {
-      alpha: false, // 알파 채널 비활성화로 성능 향상
-      desynchronized: true, // 렌더링 최적화
+      alpha: false,
+      desynchronized: true,
     });
 
     if (!ctx || video.readyState !== video.HAVE_ENOUGH_DATA) {
@@ -110,6 +110,18 @@ export function useCamera() {
       const videoWidth = video.videoWidth;
       const videoHeight = video.videoHeight;
 
+      console.log("사진 촬영 시작", {
+        videoWidth,
+        videoHeight,
+        readyState: video.readyState,
+      });
+
+      if (videoWidth === 0 || videoHeight === 0) {
+        console.error("비디오 크기가 0입니다");
+        alert("비디오가 준비되지 않았습니다. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+
       const captureCanvas = document.createElement("canvas");
       captureCanvas.width = videoWidth;
       captureCanvas.height = videoHeight;
@@ -118,8 +130,21 @@ export function useCamera() {
       if (ctx) {
         ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
         const imageDataUrl = captureCanvas.toDataURL("image/jpeg", 0.95);
-        setBackgroundImage(imageDataUrl);
-        closeCamera();
+
+        console.log("사진 촬영 완료", {
+          dataUrlLength: imageDataUrl.length,
+          dataUrlPreview: imageDataUrl.substring(0, 50),
+        });
+
+        if (imageDataUrl && imageDataUrl.length > 0) {
+          setBackgroundImage(imageDataUrl);
+          closeCamera();
+        } else {
+          console.error("이미지 데이터 URL 생성 실패");
+          alert("사진 촬영에 실패했습니다. 다시 시도해주세요.");
+        }
+      } else {
+        console.error("Canvas context를 가져올 수 없습니다");
       }
     }
   }, [closeCamera]);
@@ -131,6 +156,14 @@ export function useCamera() {
     if (imageObjRef.current) {
       imageObjRef.current.src = "";
       imageObjRef.current = null;
+    }
+    // Canvas 클리어
+    if (backgroundCanvasRef.current) {
+      const canvas = backgroundCanvasRef.current;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
     }
   }, []);
 
@@ -181,6 +214,16 @@ export function useCamera() {
       const ctx = canvas.getContext("2d", { alpha: false });
       if (!ctx) return;
 
+      // 배경을 먼저 어두운 색으로 채우기
+      ctx.fillStyle = "hsl(222.2, 47%, 6%)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 이미지가 로드되지 않았으면 리턴
+      if (!img.complete || img.width === 0 || img.height === 0) {
+        console.warn("이미지가 아직 로드되지 않음");
+        return;
+      }
+
       const imgRatio = img.width / img.height;
       const canvasRatio = canvas.width / canvas.height;
 
@@ -197,7 +240,6 @@ export function useCamera() {
         drawX = (canvas.width - drawWidth) / 2;
       }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
     },
     [],
@@ -205,21 +247,89 @@ export function useCamera() {
 
   // 배경 이미지를 canvas에 그리기 - 최적화
   useEffect(() => {
-    if (backgroundImage && backgroundCanvasRef.current) {
-      const canvas = backgroundCanvasRef.current;
+    if (!backgroundCanvasRef.current) return;
+
+    const canvas = backgroundCanvasRef.current;
+
+    // Canvas 크기 설정 (먼저 설정)
+    const setCanvasSize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+    };
+    setCanvasSize();
 
-      // 이미지 객체 재사용
-      if (!imageObjRef.current) {
-        imageObjRef.current = new Image();
+    if (backgroundImage) {
+      // 이미지 객체를 새로 생성하여 이전 상태와 충돌 방지
+      const newImg = new Image();
+
+      const drawImageWithImg = (imageToDraw: HTMLImageElement) => {
+        if (!backgroundCanvasRef.current) {
+          console.warn("backgroundCanvasRef가 없습니다");
+          return;
+        }
+        const canvas = backgroundCanvasRef.current;
+
+        // Canvas 크기 재설정
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        console.log("배경 이미지 그리기 시작", {
+          canvasWidth: canvas.width,
+          canvasHeight: canvas.height,
+          imgWidth: imageToDraw.width,
+          imgHeight: imageToDraw.height,
+          imgComplete: imageToDraw.complete,
+        });
+
+        // 크기 변경 후 다시 그리기
+        drawBackgroundImage(canvas, imageToDraw);
+
+        // 그리기 후 확인
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const imageData = ctx.getImageData(
+            0,
+            0,
+            Math.min(10, canvas.width),
+            Math.min(10, canvas.height),
+          );
+          const hasData = imageData.data.some(
+            (pixel, index) => index % 4 !== 3 && pixel !== 0,
+          );
+          console.log("Canvas에 데이터가 있는지 확인:", hasData);
+        }
+      };
+
+      newImg.onload = () => {
+        console.log("이미지 로드 성공", {
+          width: newImg.width,
+          height: newImg.height,
+        });
+        drawImageWithImg(newImg);
+      };
+
+      newImg.onerror = (e) => {
+        console.error("배경 이미지 로드 실패", e, {
+          src: backgroundImage.substring(0, 100),
+          isDataUrl: backgroundImage.startsWith("data:"),
+        });
+      };
+
+      // data URL은 crossOrigin 설정 불필요
+      if (!backgroundImage.startsWith("data:")) {
+        newImg.crossOrigin = "anonymous";
       }
 
-      const img = imageObjRef.current;
-      img.onload = () => {
-        drawBackgroundImage(canvas, img);
-      };
-      img.src = backgroundImage;
+      console.log("이미지 로드 시작", {
+        src: backgroundImage.substring(0, 50),
+        isDataUrl: backgroundImage.startsWith("data:"),
+      });
+
+      // 이미지 객체 저장
+      imageObjRef.current = newImg;
+      newImg.src = backgroundImage;
     } else if (backgroundCanvasRef.current) {
       // 배경 제거 시 어두운 배경색으로 채우기
       const canvas = backgroundCanvasRef.current;
@@ -230,6 +340,7 @@ export function useCamera() {
         // 어두운 배경색 (dark theme에 맞춤)
         ctx.fillStyle = "hsl(222.2, 47%, 6%)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+        console.log("배경 제거, 어두운 배경색으로 채움");
       }
     }
   }, [backgroundImage, drawBackgroundImage]);
@@ -239,7 +350,6 @@ export function useCamera() {
     let resizeTimeout: ReturnType<typeof setTimeout>;
 
     const handleResize = () => {
-      // 디바운스: 리사이즈 이벤트가 끝난 후 100ms 후에 실행
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         if (backgroundCanvasRef.current) {
@@ -253,13 +363,6 @@ export function useCamera() {
             imageObjRef.current.complete
           ) {
             drawBackgroundImage(canvas, imageObjRef.current);
-          } else {
-            // 배경이 없을 때 어두운 배경색으로 채우기
-            const ctx = canvas.getContext("2d", { alpha: false });
-            if (ctx) {
-              ctx.fillStyle = "hsl(222.2, 47%, 6%)";
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-            }
           }
         }
       }, 100);

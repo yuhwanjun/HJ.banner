@@ -1,5 +1,36 @@
 import type { BannerDesignComponentProps } from "@/types/banner";
 
+// Kookmin0 전용 스타일 맵
+const getKookmin0Style = (className: string): React.CSSProperties => {
+  const styleMap: Record<string, React.CSSProperties> = {
+    st1: {
+      fill: "#000",
+      fontFamily: "Pretendard-Black-KSCpc-EUC-H, Pretendard",
+      fontWeight: 800,
+      fontSize: "166.9px",
+    },
+    st2: {
+      fill: "#fff",
+      fontFamily: "Pretendard-Black-KSCpc-EUC-H, Pretendard",
+      fontWeight: 800,
+      fontSize: "78.3px",
+    },
+    st3: {
+      fill: "#fff",
+      fontFamily: "Pretendard-Black-KSCpc-EUC-H, Pretendard",
+      fontWeight: 800,
+      fontSize: "166.9px",
+    },
+    st5: {
+      fill: "#fff",
+      fontFamily: "Pretendard-SemiBold-KSCpc-EUC-H, Pretendard",
+      fontWeight: 600,
+      fontSize: "69.8px",
+    },
+  };
+  return styleMap[className] || {};
+};
+
 export function Kookmin0({
   editableAreas,
   values = {},
@@ -21,52 +52,29 @@ export function Kookmin0({
     >
       <defs>
         <style>
-          {`.st0 {
+          {`.kookmin-st0 {
             fill: #0f3c90;
           }
   
-          .st1, .st2, .st3 {
-            font-family: Pretendard-Black-KSCpc-EUC-H, Pretendard;
-            font-weight: 800;
-          }
-  
-          .st1, .st3 {
-            font-size: 166.9px;
-          }
-  
-          .st4 {
+          .kookmin-st4 {
             fill: #c12831;
           }
   
-          .st2 {
-            font-size: 78.3px;
-          }
-  
-          .st2, .st5, .st3 {
-            fill: #fff;
-          }
-  
-          .st5 {
-            font-family: Pretendard-SemiBold-KSCpc-EUC-H, Pretendard;
-            font-size: 69.8px;
-            font-weight: 600;
-          }
-  
-          .st6 {
+          .kookmin-st6 {
             fill: #006164;
           }
   
-          .st7 {
+          .kookmin-st7 {
             fill: #532382;
           }`}
         </style>
       </defs>
       <g>
         <rect width="2560" height="314" fill="#ffffff" />
-        <path className="st4" d="M1373,0h1187v314h-1313.5L1373,0Z" />
-        <rect className="st0" x="30" y="19" width="111" height="104" />
-        <rect className="st7" x="141" y="19" width="96" height="104" />
-        <rect className="st6" x="237" y="19" width="114" height="104" />
+        <path className="kookmin-st4" d="M1373,0h1187v314h-1313.5L1373,0Z" />
+        <rect className="kookmin-st0" x="30" y="19" width="111" height="104" />
+        <rect className="kookmin-st7" x="141" y="19" width="96" height="104" />
+        <rect className="kookmin-st6" x="237" y="19" width="114" height="104" />
       </g>
       <g>
         {editableAreas.map((area) => {
@@ -77,8 +85,8 @@ export function Kookmin0({
           return (
             <text
               key={area.id}
-              className={area.className || ""}
               transform={area.transform}
+              style={getKookmin0Style(area.className || "")}
             >
               <tspan x="0" y="0">
                 {value}
