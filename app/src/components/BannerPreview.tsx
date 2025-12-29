@@ -37,6 +37,10 @@ export function BannerPreview({
         MozUserSelect: "none",
         msUserSelect: "none",
         pointerEvents: "none",
+        // 고품질 렌더링을 위한 속성
+        imageRendering: "auto",
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
       }}
     >
       <div

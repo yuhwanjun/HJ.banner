@@ -1,22 +1,23 @@
 import { Nav } from "@/components/Nav";
+import { IntroModal } from "@/components/IntroModal";
 import { useNavigatorContext } from "@/contexts/NavigatorContext";
 import { getStepByIndex } from "@/config/steps";
 import { cn } from "@/utils/cn";
 import { BannerProvider } from "@/contexts/BannerContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function HomeContent() {
   const navigator = useNavigatorContext();
   const currentStepConfig = getStepByIndex(navigator.currentStep);
   const CurrentComponent = currentStepConfig?.component;
 
-  // Step2 (index 1)를 제외한 모든 페이지에서 스크롤 방지
-  const isStep2 = navigator.currentStep === 1;
-  // Step4 (index 3)에서는 배경 투명하게
-  const isStep4 = navigator.currentStep === 3;
+  // Step1 (index 0)은 디자인 선택이므로 스크롤 허용
+  const isSelectStep = navigator.currentStep === 0;
+  // Step2 (index 1)에서는 배경 투명하게 (미리보기)
+  const isPreviewStep = navigator.currentStep === 1;
 
   useEffect(() => {
-    if (!isStep2) {
+    if (!isSelectStep) {
       // 스크롤 방지
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
@@ -27,7 +28,7 @@ function HomeContent() {
       document.body.style.overscrollBehavior = "none";
       document.documentElement.style.overscrollBehavior = "none";
     } else {
-      // Step2에서는 스크롤 허용
+      // 디자인 선택 페이지에서는 스크롤 허용
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
@@ -36,8 +37,8 @@ function HomeContent() {
       document.documentElement.style.overscrollBehavior = "";
     }
 
-    // Step4에서는 배경 canvas가 있으므로 어두운 배경색 유지
-    if (isStep4) {
+    // 미리보기에서는 배경 canvas가 있으므로 어두운 배경색 유지
+    if (isPreviewStep) {
       document.body.style.backgroundColor = "hsl(222.2, 47%, 6%)";
       document.documentElement.style.backgroundColor = "hsl(222.2, 47%, 6%)";
     } else {
@@ -56,20 +57,20 @@ function HomeContent() {
       document.body.style.backgroundColor = "";
       document.documentElement.style.backgroundColor = "";
     };
-  }, [isStep2, isStep4]);
+  }, [isSelectStep, isPreviewStep]);
 
   return (
     <main
       className={cn(
         "flex h-full w-full flex-1 items-start justify-center",
-        !isStep4 && "bg-background",
+        !isPreviewStep && "bg-background",
         "p-4 pb-24 sm:p-6",
-        isStep2 ? "overflow-auto" : "overflow-hidden",
+        isSelectStep ? "overflow-auto" : "overflow-hidden",
       )}
       style={{
-        overscrollBehavior: isStep2 ? "auto" : "none",
-        touchAction: isStep2 ? "auto" : "pan-y pinch-zoom",
-        backgroundColor: isStep4 ? "transparent" : undefined,
+        overscrollBehavior: isSelectStep ? "auto" : "none",
+        touchAction: isSelectStep ? "auto" : "pan-y pinch-zoom",
+        backgroundColor: isPreviewStep ? "transparent" : undefined,
       }}
     >
       <div className="w-full max-w-6xl">
@@ -80,11 +81,14 @@ function HomeContent() {
 }
 
 export function HomeContainer() {
+  const [showIntro, setShowIntro] = useState(true);
+
   return (
     <BannerProvider>
       <Nav>
         <HomeContent />
       </Nav>
+      {showIntro && <IntroModal onClose={() => setShowIntro(false)} />}
     </BannerProvider>
   );
 }

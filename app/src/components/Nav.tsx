@@ -2,7 +2,6 @@ import { useNavigator } from "@/hooks/useNavigator";
 import { STEPS } from "@/config/steps";
 import { cn } from "@/utils/cn";
 import { NavigatorProvider } from "@/contexts/NavigatorContext";
-import { Button } from "@/components/ui/button";
 
 interface NavProps {
   children: React.ReactNode;
@@ -18,87 +17,10 @@ export function Nav({ children }: NavProps) {
     },
   });
 
-  const isStep4 = navigator.currentStep === 3;
-
   return (
     <NavigatorProvider value={navigator}>
-      <div className={cn("flex h-full min-h-screen w-full flex-col gap-2")}>
+      <div className={cn("flex h-full min-h-screen w-full flex-col")}>
         {children}
-        <nav
-          className={cn(
-            "fixed bottom-0 left-0 right-0 z-50 flex w-full flex-col gap-1 border-t p-4 backdrop-blur md:min-w-[280px]",
-            !isStep4 && "bg-background/95",
-          )}
-          style={{
-            backgroundColor: isStep4 ? "transparent" : undefined,
-          }}
-        >
-          {/* Step 인디케이터 */}
-          <div
-            className={cn(
-              "mx-auto flex w-fit max-w-md items-center justify-between",
-            )}
-          >
-            {STEPS.map((step, index) => (
-              <div key={step.id} className={cn("flex flex-1 items-center")}>
-                <Button
-                  onClick={() => navigator.goTo(index)}
-                  size="icon"
-                  variant={
-                    index === navigator.currentStep
-                      ? "default"
-                      : index < navigator.currentStep
-                        ? "secondary"
-                        : "outline"
-                  }
-                  className={cn(
-                    "h-3 w-3 rounded-full",
-                    index === navigator.currentStep &&
-                      "ring-primary ring-2 ring-offset-2",
-                    // outline이 아닌 경우 (default, secondary) 흰색 fill
-                    index !== navigator.currentStep &&
-                      index < navigator.currentStep &&
-                      "bg-white",
-                    index === navigator.currentStep && "bg-white",
-                    // outline variant일 때 얇은 보더
-                    index > navigator.currentStep && "border-[0.5px]",
-                  )}
-                />
-                {index < STEPS.length - 1 && (
-                  <div
-                    className={cn(
-                      "mx-1 h-1 flex-1",
-                      index < navigator.currentStep ? "bg-primary" : "bg-muted",
-                    )}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* 이전/다음 버튼 */}
-          <div
-            className={cn(
-              "mx-auto flex w-fit max-w-md items-center justify-between gap-3 sm:gap-4",
-            )}
-          >
-            <Button
-              onClick={navigator.prev}
-              disabled={!navigator.canGoPrev}
-              variant="outline"
-              className="flex-1"
-            >
-              이전
-            </Button>
-            <Button
-              onClick={navigator.next}
-              disabled={!navigator.canGoNext}
-              className="flex-1"
-            >
-              다음
-            </Button>
-          </div>
-        </nav>
       </div>
     </NavigatorProvider>
   );

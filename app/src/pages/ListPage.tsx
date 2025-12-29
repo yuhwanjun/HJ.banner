@@ -5,7 +5,7 @@ import { useBannerContext } from "@/contexts/BannerContext";
 import { useNavigatorContext } from "@/contexts/NavigatorContext";
 import { Card, CardContent } from "@/components/ui/card";
 
-export function Step2() {
+export function ListPage() {
   const { setSelectedDesign, editedValues } = useBannerContext();
   const navigator = useNavigatorContext();
 
@@ -29,7 +29,7 @@ export function Step2() {
                     className="cursor-pointer overflow-hidden transition-all hover:shadow-lg"
                     onClick={() => {
                       setSelectedDesign(design);
-                      navigator.goTo(2);
+                      navigator.goTo(1);
                     }}
                   >
                     <CardContent className="p-0">
@@ -45,3 +45,4 @@ export function Step2() {
     </div>
   );
 }
+

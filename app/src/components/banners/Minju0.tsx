@@ -47,6 +47,8 @@ export function Minju0({
         MozUserSelect: "none",
         msUserSelect: "none",
         pointerEvents: "none",
+        shapeRendering: "geometricPrecision",
+        textRendering: "geometricPrecision",
       }}
       onDragStart={(e) => e.preventDefault()}
     >

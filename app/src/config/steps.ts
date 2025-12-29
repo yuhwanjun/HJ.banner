@@ -1,7 +1,5 @@
-import { Step1 } from "@/pages/Step1";
-import { Step2 } from "@/pages/Step2";
-import { Step3 } from "@/pages/Step3";
-import { Step4 } from "@/pages/Step4";
+import { ListPage } from "@/pages/ListPage";
+import { EditPage } from "@/pages/EditPage";
 
 /**
  * Step 정의 타입
@@ -18,24 +16,14 @@ export interface StepConfig {
  */
 export const STEPS: StepConfig[] = [
   {
-    id: "step1",
-    title: "Step 1",
-    component: Step1,
+    id: "select",
+    title: "디자인 선택",
+    component: ListPage,
   },
   {
-    id: "step2",
-    title: "Step 2",
-    component: Step2,
-  },
-  {
-    id: "step3",
-    title: "Step 3",
-    component: Step3,
-  },
-  {
-    id: "step4",
-    title: "Step 4",
-    component: Step4,
+    id: "preview",
+    title: "미리보기",
+    component: EditPage,
   },
 ];
 
